@@ -1,0 +1,36 @@
+{
+  "name": "grunt-sweet.js",
+  "description": "Grunt plugin for Sweet.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/natefaubion/grunt-sweet.js",
+  "author": {
+    "name": "Nathan Faubion",
+    "email": "nathan@n-son.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/natefaubion/grunt-sweet.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/natefaubion/grunt-sweet.js/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/natefaubion/grunt-sweet.js/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "sweet.js": "~0.2.6"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
