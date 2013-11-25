@@ -8,8 +8,9 @@
 
 'use strict';
 
-module.exports = function(grunt) {
+var path = require('path');
 
+module.exports = function(grunt) {
   var moduleCache = {};
   var sweet = require('sweet.js');
 
@@ -30,12 +31,28 @@ module.exports = function(grunt) {
         } else {
           return true;
         }
-      }).map(function(filepath) {
-        return grunt.file.read(filepath);
-      }).join('\n');
+      }).forEach(function(file) {
+          // Only compile .sjs files so we don't clobber any real .js files
+          if(file.match(/.sjs$/)) {
+              var outpath = file.replace(/.sjs$/, '.js');
+              var mapfile = path.basename(outpath) + '.map';
 
-      grunt.file.write(f.dest, sweet.compile(moduleSrc + '\n' + src));
-      grunt.log.writeln('File "' + f.dest + '" created.');
+              grunt.log.warn('compiling ' + file);
+              var result = sweet.compile(grunt.file.read(file), {
+                  sourceMap: options.sourceMap,
+                  filename: file,
+                  macros: moduleSrc
+              });
+
+              grunt.file.write(outpath,
+                               result.code + '\n//# sourceMappingURL=' + mapfile);
+
+              if(result.sourceMap) {
+                  grunt.file.write(outpath + '.map', result.sourceMap, 'utf8');
+              }
+          }
+      });
+
     });
   });
 
@@ -50,7 +67,7 @@ module.exports = function(grunt) {
       filename: '$sweet-loader.js',
       paths: /^\.\/|\.\./.test(cwd) ? [cwd] : Module._nodeModulePaths(cwd)
     };
-    var path = Module._resolveFilename(mod, mockModule)
+    var path = Module._resolveFilename(mod, mockModule);
     return grunt.file.read(path);
   }
 };
