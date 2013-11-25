@@ -44,8 +44,13 @@ module.exports = function(grunt) {
                   macros: moduleSrc
               });
 
-              grunt.file.write(outpath,
-                               result.code + '\n//# sourceMappingURL=' + mapfile);
+              var code = result.code + '\n//# sourceMappingURL=' + mapfile;
+
+              if(options.goodNodeErrors) {
+                  code = "require('source-map-support').install(); " + code;
+              }
+
+              grunt.file.write(outpath, code);
 
               if(result.sourceMap) {
                   grunt.file.write(outpath + '.map', result.sourceMap, 'utf8');
