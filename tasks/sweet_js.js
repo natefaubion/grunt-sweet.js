@@ -9,10 +9,32 @@
 'use strict';
 
 var path = require('path');
+var sweet = require('sweet.js');
+
+function sweetCompile(grunt, code, dest, opts) {
+  var mapfile = path.basename(dest) + '.map';
+
+  var result = sweet.compile(code, {
+    sourceMap: opts.sourceMap,
+    filename: opts.filename,
+    macros: opts.macros
+  });
+
+  var compiled = result.code + '\n//# sourceMappingURL=' + mapfile;
+
+  if(opts.nodeSourceMapSupport) {
+    compiled = "require('source-map-support').install(); " + compiled;
+  }
+
+  grunt.file.write(dest, compiled);
+
+  if(result.sourceMap) {
+    grunt.file.write(dest + '.map', result.sourceMap, 'utf8');
+  }
+};
 
 module.exports = function(grunt) {
   var moduleCache = {};
-  var sweet = require('sweet.js');
 
   grunt.registerMultiTask('sweet_js', 'Sweeten your JavaScript', function() {
     var options = this.options({
@@ -31,33 +53,43 @@ module.exports = function(grunt) {
         } else {
           return true;
         }
-      }).forEach(function(file) {
-          // Only compile .sjs files so we don't clobber any real .js files
-          if(file.match(/.sjs$/)) {
-              var outpath = file.replace(/.sjs$/, '.js');
-              var mapfile = path.basename(outpath) + '.map';
-
-              grunt.log.warn('compiling ' + file);
-              var result = sweet.compile(grunt.file.read(file), {
-                  sourceMap: options.sourceMap,
-                  filename: file,
-                  macros: moduleSrc
-              });
-
-              var code = result.code + '\n//# sourceMappingURL=' + mapfile;
-
-              if(options.goodNodeErrors) {
-                  code = "require('source-map-support').install(); " + code;
-              }
-
-              grunt.file.write(outpath, code);
-
-              if(result.sourceMap) {
-                  grunt.file.write(outpath + '.map', result.sourceMap, 'utf8');
-              }
-          }
       });
 
+      if(f.dest) {
+        var src = src.map(function(filepath) {
+          return grunt.file.read(filepath);
+        }).join('\n');
+
+        sweetCompile(grunt, src, f.dest, {
+          filename: '<concatenated>',
+          sourceMap: options.sourceMap,
+          macros: moduleSrc,
+          nodeSourceMapSupport: options.nodeSourceMapSupport
+        });
+      }
+      else {
+        src.forEach(function(filepath) {
+          var outpath;
+          var ext = path.extname(filepath);
+          var base = path.join(path.dirname(filepath),
+                               path.basename(filepath, ext));
+
+          if(ext == '.js') {
+            outpath = base + '.built.js';
+          }
+          else {
+            outpath = base + '.js';
+          }
+
+          grunt.log.warn('compiling ' + filepath);
+          sweetCompile(grunt, grunt.file.read(filepath), outpath, {
+            filename: filepath,
+            sourceMap: options.sourceMap,
+            macros: moduleSrc,
+            nodeSourceMapSupport: options.nodeSourceMapSupport
+          });
+        });
+      }
     });
   });
 
@@ -76,3 +108,5 @@ module.exports = function(grunt) {
     return grunt.file.read(path);
   }
 };
+
+module.exports.compile = sweetCompile;
