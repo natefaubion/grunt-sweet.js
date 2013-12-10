@@ -43,6 +43,20 @@ Default value: []
 
 A list of macros you want to use. These can be npm modules or local files. Analagous to the `sjs -m` option.
 
+#### options.sourceMap
+Type: boolean
+Default value: false
+
+Generate sourcemaps along with JavaScript files
+
+#### options.nodeSourceMapSupport
+Type: boolean
+Default value: false
+
+Automatically load the
+[source-map-support](https://github.com/evanw/node-source-map-support)
+node module in generated files so errors automatically use sourcemaps. (You need to install the module with `npm install source-map-support`)
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 

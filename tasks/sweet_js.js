@@ -2,7 +2,7 @@
  * grunt-sweet.js
  * https://github.com/natefaubion/grunt-sweet.js
  *
- * Copyright (c) 2013 Nathan Faubion
+ * Copyright (c) 2013 Nathan Faubion, James Long
  * Licensed under the MIT license.
  */
 
@@ -20,7 +20,10 @@ function sweetCompile(grunt, code, dest, opts) {
     macros: opts.macros
   });
 
-  var compiled = result.code + '\n//# sourceMappingURL=' + mapfile;
+  var compiled = result.code;
+  if(opts.sourceMap) {
+      compiled += '\n//# sourceMappingURL=' + mapfile;
+  }
 
   if(opts.nodeSourceMapSupport) {
     compiled = "require('source-map-support').install(); " + compiled;
@@ -37,6 +40,7 @@ module.exports = function(grunt) {
   var moduleCache = {};
 
   grunt.registerMultiTask('sweet_js', 'Sweeten your JavaScript', function() {
+    var task = this;
     var options = this.options({
       modules: []
     });
@@ -81,7 +85,7 @@ module.exports = function(grunt) {
             outpath = base + '.js';
           }
 
-          grunt.log.warn('compiling ' + filepath);
+          grunt.log.writeln('compiling ' + filepath);
           sweetCompile(grunt, grunt.file.read(filepath), outpath, {
             filename: filepath,
             sourceMap: options.sourceMap,
@@ -108,5 +112,3 @@ module.exports = function(grunt) {
     return grunt.file.read(path);
   }
 };
-
-module.exports.compile = sweetCompile;
