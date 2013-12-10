@@ -59,7 +59,7 @@ module.exports = function(grunt) {
         }
       });
 
-      if(f.dest) {
+      if(f.dest && f.src.length > 1) {
         var src = src.map(function(filepath) {
           return grunt.file.read(filepath);
         }).join('\n');
@@ -78,7 +78,10 @@ module.exports = function(grunt) {
           var base = path.join(path.dirname(filepath),
                                path.basename(filepath, ext));
 
-          if(ext == '.js') {
+          if(f.dest) {
+            outpath = f.dest;
+          }
+          else if(ext == '.js') {
             outpath = base + '.built.js';
           }
           else {
