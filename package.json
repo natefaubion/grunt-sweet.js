@@ -27,10 +27,8 @@
     "grunt": "~0.4.1"
   },
   "peerDependencies": {
-    "grunt": "~0.4.1"
-  },
-  "dependencies": {
-    "sweet.js": "~0.2.6"
+    "grunt": "~0.4.1",
+    "sweet.js": ">=0.2.6"
   },
   "keywords": [
     "gruntplugin"

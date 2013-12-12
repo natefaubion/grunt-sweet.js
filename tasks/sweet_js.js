@@ -2,18 +2,45 @@
  * grunt-sweet.js
  * https://github.com/natefaubion/grunt-sweet.js
  *
- * Copyright (c) 2013 Nathan Faubion
+ * Copyright (c) 2013 Nathan Faubion, James Long
  * Licensed under the MIT license.
  */
 
 'use strict';
 
-module.exports = function(grunt) {
+var path = require('path');
+var sweet = require('sweet.js');
 
+function sweetCompile(grunt, code, dest, opts) {
+  var mapfile = path.basename(dest) + '.map';
+
+  var result = sweet.compile(code, {
+    sourceMap: opts.sourceMap,
+    filename: opts.filename,
+    macros: opts.macros
+  });
+
+  var compiled = result.code;
+  if(opts.sourceMap) {
+      compiled += '\n//# sourceMappingURL=' + mapfile;
+  }
+
+  if(opts.nodeSourceMapSupport) {
+    compiled = "require('source-map-support').install(); " + compiled;
+  }
+
+  grunt.file.write(dest, compiled);
+
+  if(result.sourceMap) {
+    grunt.file.write(dest + '.map', result.sourceMap, 'utf8');
+  }
+};
+
+module.exports = function(grunt) {
   var moduleCache = {};
-  var sweet = require('sweet.js');
 
   grunt.registerMultiTask('sweet_js', 'Sweeten your JavaScript', function() {
+    var task = this;
     var options = this.options({
       modules: []
     });
@@ -30,12 +57,46 @@ module.exports = function(grunt) {
         } else {
           return true;
         }
-      }).map(function(filepath) {
-        return grunt.file.read(filepath);
-      }).join('\n');
+      });
 
-      grunt.file.write(f.dest, sweet.compile(moduleSrc + '\n' + src));
-      grunt.log.writeln('File "' + f.dest + '" created.');
+      if(f.dest && f.src.length > 1) {
+        var src = src.map(function(filepath) {
+          return grunt.file.read(filepath);
+        }).join('\n');
+
+        sweetCompile(grunt, src, f.dest, {
+          filename: '<concatenated>',
+          sourceMap: options.sourceMap,
+          macros: moduleSrc,
+          nodeSourceMapSupport: options.nodeSourceMapSupport
+        });
+      }
+      else {
+        src.forEach(function(filepath) {
+          var outpath;
+          var ext = path.extname(filepath);
+          var base = path.join(path.dirname(filepath),
+                               path.basename(filepath, ext));
+
+          if(f.dest) {
+            outpath = f.dest;
+          }
+          else if(ext == '.js') {
+            outpath = base + '.built.js';
+          }
+          else {
+            outpath = base + '.js';
+          }
+
+          grunt.log.writeln('compiling ' + filepath);
+          sweetCompile(grunt, grunt.file.read(filepath), outpath, {
+            filename: filepath,
+            sourceMap: options.sourceMap,
+            macros: moduleSrc,
+            nodeSourceMapSupport: options.nodeSourceMapSupport
+          });
+        });
+      }
     });
   });
 
@@ -50,7 +111,7 @@ module.exports = function(grunt) {
       filename: '$sweet-loader.js',
       paths: /^\.\/|\.\./.test(cwd) ? [cwd] : Module._nodeModulePaths(cwd)
     };
-    var path = Module._resolveFilename(mod, mockModule)
+    var path = Module._resolveFilename(mod, mockModule);
     return grunt.file.read(path);
   }
 };
