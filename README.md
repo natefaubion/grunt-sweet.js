@@ -66,5 +66,6 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 *    Source map support
 *    Changed task name to `sweetjs`
 *    Individually build files (just use a `src` on your target)
+
 *v0.1.0 (2013-11-17)*
 *    Initial release
