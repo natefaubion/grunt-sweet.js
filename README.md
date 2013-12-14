@@ -20,7 +20,7 @@ grunt.loadNpmTasks('grunt-sweet.js');
 ## The "sweetjs" task
 
 ### Overview
-In your project's Gruntfile, add a section named `sweet_js` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `sweetjs` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
