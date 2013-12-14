@@ -39,7 +39,7 @@ function sweetCompile(grunt, code, dest, opts) {
 module.exports = function(grunt) {
   var moduleCache = {};
 
-  grunt.registerMultiTask('sweet_js', 'Sweeten your JavaScript', function() {
+  grunt.registerMultiTask('sweetjs', 'Sweeten your JavaScript', function() {
     var task = this;
     var options = this.options({
       modules: []

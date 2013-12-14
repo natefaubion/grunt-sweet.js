@@ -1,7 +1,7 @@
 {
   "name": "grunt-sweet.js",
   "description": "Grunt plugin for Sweet.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/natefaubion/grunt-sweet.js",
   "author": {
     "name": "Nathan Faubion",
