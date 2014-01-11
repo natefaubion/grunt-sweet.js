@@ -62,6 +62,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+*v0.1.3 (2014-1-11)*
+*    Updates for sweet.js 0.4.x
+*    Much faster compilation for many files
+
 *v0.1.2 (2013-12-13)*
 *    Source map support
 *    Changed task name to `sweetjs`
