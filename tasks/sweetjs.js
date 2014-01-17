@@ -13,14 +13,9 @@ var sweet = require('sweet.js');
 
 function sweetCompile(grunt, code, dest, opts) {
   var mapfile = path.basename(dest) + '.map';
-
-  var result = sweet.compile(code, {
-    sourceMap: opts.sourceMap,
-    filename: opts.filename,
-    modules: opts.modules
-  });
-
+  var result = sweet.compile(code, opts);
   var compiled = result.code;
+
   if(opts.sourceMap) {
       compiled += '\n//# sourceMappingURL=' + mapfile;
   }
@@ -68,7 +63,8 @@ module.exports = function(grunt) {
           filename: '<concatenated>',
           sourceMap: options.sourceMap,
           modules: moduleContexts,
-          nodeSourceMapSupport: options.nodeSourceMapSupport
+          nodeSourceMapSupport: options.nodeSourceMapSupport,
+          readableNames: options.readableNames
         });
       }
       else {
@@ -93,7 +89,8 @@ module.exports = function(grunt) {
             filename: filepath,
             sourceMap: options.sourceMap,
             modules: moduleContexts,
-            nodeSourceMapSupport: options.nodeSourceMapSupport
+            nodeSourceMapSupport: options.nodeSourceMapSupport,
+            readableNames: options.readableNames
           });
         });
       }

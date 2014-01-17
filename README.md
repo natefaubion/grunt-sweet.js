@@ -57,10 +57,19 @@ Automatically load the
 [source-map-support](https://github.com/evanw/node-source-map-support)
 node module in generated files so errors automatically use sourcemaps. (You need to install the module with `npm install source-map-support`)
 
+#### options.readableNames
+Type: boolean
+Default value: false
+
+Cleans up the hygienic renames that sweet.js generates. Currently only supports ES5 code.
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+
+*v0.1.4 (2014-1-16)*
+*    Support for the `readableNames` options
 
 *v0.1.3 (2014-1-11)*
 *    Updates for sweet.js 0.4.x
