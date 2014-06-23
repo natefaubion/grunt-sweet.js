@@ -75,7 +75,12 @@ module.exports = function(grunt) {
                                path.basename(filepath, ext));
 
           if(f.dest) {
-            outpath = f.dest;
+            var lastchar = f.dest.substr(f.dest.length-1);
+            if (lastchar === "/" || lastchar === "\\") {
+              outpath = f.dest + path.basename(filepath,ext) + '.js';
+            } else {
+              outpath = f.dest;
+            }
           }
           else if(ext == '.js') {
             outpath = base + '.built.js';
