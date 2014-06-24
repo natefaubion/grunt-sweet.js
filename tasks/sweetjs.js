@@ -54,7 +54,10 @@ module.exports = function(grunt) {
         }
       });
 
-      if(f.dest && f.src.length > 1) {
+      var lastchar = f.dest && f.dest[f.dest.length - 1];
+      var isDir = lastchar && (lastchar === '/' || lastchar === "\\");
+
+      if(f.dest && !isDir && f.src.length > 1) {
         var src = src.map(function(filepath) {
           return grunt.file.read(filepath);
         }).join('\n');
@@ -75,8 +78,7 @@ module.exports = function(grunt) {
                                path.basename(filepath, ext));
 
           if(f.dest) {
-            var lastchar = f.dest.substr(f.dest.length-1);
-            if (lastchar === "/" || lastchar === "\\") {
+            if(isDir) {
               outpath = f.dest + path.basename(filepath,ext) + '.js';
             } else {
               outpath = f.dest;
