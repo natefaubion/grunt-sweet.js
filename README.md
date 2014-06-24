@@ -26,11 +26,23 @@ In your project's Gruntfile, add a section named `sweetjs` to the data object pa
 grunt.initConfig({
   sweetjs: {
     options: {
-      // Task-specific options go here.
+      modules: ['sparkler/macros', 'adt-simple/macros'],
+      readableNames: true
     },
-    your_target: {
-      // Target-specific file lists and/or options go here.
+    // Compiles to .js or .built.js files
+    target_1: {
+      src: 'files/*.sjs'
     },
+    // Compiles to a combined file
+    target_2: {
+      src: 'files/*.sjs',
+      dest: 'out.js'
+    },
+    // Compiles to a directory
+    target_3 {
+      src: 'files/*.sjs',
+      dest: 'out/'
+    }
   },
 })
 ```
@@ -67,6 +79,10 @@ Cleans up the hygienic renames that sweet.js generates. Currently only supports 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+
+*v0.1.5 (2014-6-23)*
+*    Updated with latest sweet.js
+*    Added compile to directory option
 
 *v0.1.4 (2014-1-16)*
 *    Support for the `readableNames` options
