@@ -39,7 +39,7 @@ grunt.initConfig({
       dest: 'out.js'
     },
     // Compiles to a directory
-    target_3 {
+    target_3: {
       src: 'files/*.sjs',
       dest: 'out/'
     }
